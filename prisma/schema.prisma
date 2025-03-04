@@ -19,7 +19,7 @@ model User {
   email         String      @unique
   password_hash String
   created_at    DateTime    @default(now())
-  task_lists    TaskLists[]
+  taskLists     TaskLists[]
 
   @@map("users")
 }
@@ -30,7 +30,7 @@ model TaskLists {
   created_at DateTime @default(now())
   user       User     @relation(fields: [user_id], references: [id])
   user_id    String
-  Task       Task[]
+  task       Task[]
 
   @@map("task_lists")
 }
