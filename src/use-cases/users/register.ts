@@ -8,9 +8,11 @@ interface RegisterUseCaseRequest {
   email: string
   password: string
 }
+
 interface RegisterUseCaseResponse {
   user: User
 }
+
 export class RegisterUseCase {
   constructor(private usersRepository: UsersRepository) {}
 
