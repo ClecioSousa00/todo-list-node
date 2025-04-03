@@ -26,4 +26,14 @@ export class InMemoryTaskListsRepository implements TaskListsRepository {
 
     return taskList || null
   }
+
+  async searchMany(title: string, userId: string) {
+    const userTaskLists = this.items.filter((item) => item.user_id === userId)
+
+    const taskLists = userTaskLists.filter((item) =>
+      item.title.toLowerCase().includes(title.toLowerCase()),
+    )
+
+    return taskLists
+  }
 }

@@ -2,7 +2,6 @@ import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-
 import { beforeEach, describe, expect, it } from 'vitest'
 import { CreateTaskListsUseCases } from './create-task-lists'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
 
 let taskListsRepository: InMemoryTaskListsRepository
 let userRepository: InMemoryUsersRepository
@@ -11,10 +10,7 @@ describe('Create Task Lists Use Case', () => {
   beforeEach(() => {
     taskListsRepository = new InMemoryTaskListsRepository()
     userRepository = new InMemoryUsersRepository()
-    taskListsUseCase = new CreateTaskListsUseCases(
-      taskListsRepository,
-      userRepository,
-    )
+    taskListsUseCase = new CreateTaskListsUseCases(taskListsRepository)
   })
   it('should be able create task list', async () => {
     const { id: userId } = await userRepository.create({
@@ -29,13 +25,5 @@ describe('Create Task Lists Use Case', () => {
     })
 
     expect(taskList.id).toEqual(expect.any(String))
-  })
-  it('should be able create task list with wrong user id', async () => {
-    await expect(() =>
-      taskListsUseCase.execute({
-        title: 'tarefa-1',
-        userId: 'fake-id',
-      }),
-    ).rejects.toBeInstanceOf(InvalidCredentialsError)
   })
 })
