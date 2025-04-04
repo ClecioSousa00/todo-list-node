@@ -58,4 +58,19 @@ export class InMemoryTaskListsRepository implements TaskListsRepository {
 
     return updatedTaskList
   }
+
+  async deleteTaskList(userId: string, taskListId: string) {
+    const taskListIndex = this.items.findIndex(
+      (item) => item.user_id === userId && item.id === taskListId,
+    )
+
+    if (taskListIndex === -1) return null
+
+    this.items.splice(taskListIndex, 1)
+
+    const updatedTaskLists = this.items.filter(
+      (item) => item.user_id === userId,
+    )
+    return updatedTaskLists
+  }
 }

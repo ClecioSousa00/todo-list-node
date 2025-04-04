@@ -1,7 +1,7 @@
-import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-task-lists'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { UpdateTitleTaskListUseCase } from './update-title-task-list'
 import { ResourceNotFoundError } from '../errors/resource-not-found'
+import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-task-lists-repository'
 
 let taskListRepository: InMemoryTaskListsRepository
 let updateTitleTaskListUseCase: UpdateTitleTaskListUseCase

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { SearchTaskListsUseCase } from './search-task-lists'
-import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-task-lists'
+import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-task-lists-repository'
 
 let taskListsRepository: InMemoryTaskListsRepository
 let searchTaskListUseCase: SearchTaskListsUseCase

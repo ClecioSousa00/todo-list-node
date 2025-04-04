@@ -14,4 +14,9 @@ export interface TaskListsRepository {
   updateTitleTaskList(
     props: UpdateTitleTaskListProps,
   ): Promise<TaskLists | null>
+
+  deleteTaskList(
+    userId: string,
+    taskListId: string,
+  ): Promise<TaskLists[] | null>
 }

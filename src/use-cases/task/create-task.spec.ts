@@ -1,9 +1,9 @@
-import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-task-lists'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryTaskRepository } from '@/repositories/in-memory/in-memory-task-repository'
 import { CreateTasksUseCases } from './create-task'
 import { TaskListNotFound } from '../errors/task-lists-not-found'
 import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
+import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-task-lists-repository'
 
 let taskListsRepository: InMemoryTaskListsRepository
 let taskRepository: InMemoryTaskRepository
