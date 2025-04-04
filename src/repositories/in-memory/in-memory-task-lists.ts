@@ -1,5 +1,8 @@
 import { Prisma, TaskLists } from '@prisma/client'
-import { TaskListsRepository } from '../task-lists-repository'
+import {
+  TaskListsRepository,
+  UpdateTitleTaskListProps,
+} from '../task-lists-repository'
 import { randomUUID } from 'node:crypto'
 
 export class InMemoryTaskListsRepository implements TaskListsRepository {
@@ -35,5 +38,24 @@ export class InMemoryTaskListsRepository implements TaskListsRepository {
     )
 
     return taskLists
+  }
+
+  async updateTitleTaskList(props: UpdateTitleTaskListProps) {
+    const { title, taskListId, userId } = props
+
+    const taskListIndex = this.items.findIndex(
+      (item) => item.id === taskListId && item.user_id === userId,
+    )
+
+    if (taskListIndex === -1) return null
+
+    const updatedTaskList = {
+      ...this.items[taskListIndex],
+      title,
+    }
+
+    this.items[taskListIndex] = updatedTaskList
+
+    return updatedTaskList
   }
 }
