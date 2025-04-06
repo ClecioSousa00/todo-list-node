@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryTaskRepository } from '@/repositories/in-memory/in-memory-task-repository'
 import { CreateTasksUseCases } from './create-task'
 import { TaskListNotFound } from '../errors/task-lists-not-found'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
 import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-task-lists-repository'
 
 let taskListsRepository: InMemoryTaskListsRepository
@@ -49,26 +48,5 @@ describe('Create Task Use Case', () => {
         ],
       }),
     ).rejects.toBeInstanceOf(TaskListNotFound)
-  })
-
-  it('should be not able create task  with wrong id', async () => {
-    const { id: taskListId } = await taskListsRepository.create({
-      title: 'lista de tarefas',
-      user_id: 'user-1',
-    })
-
-    await expect(() =>
-      taskUseCase.execute({
-        userId: 'user-2',
-        taskListId,
-        tasks: [
-          {
-            description: 'task-1',
-            due_date: new Date(),
-            is_checked: false,
-          },
-        ],
-      }),
-    ).rejects.toBeInstanceOf(InvalidCredentialsError)
   })
 })

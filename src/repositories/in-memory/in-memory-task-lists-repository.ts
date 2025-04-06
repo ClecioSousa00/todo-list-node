@@ -24,8 +24,10 @@ export class InMemoryTaskListsRepository implements TaskListsRepository {
     return userTaskLists
   }
 
-  async getById(taskListId: string): Promise<TaskLists | null> {
-    const taskList = this.items.find((item) => item.id === taskListId)
+  async getById(taskListId: string, userId: string): Promise<TaskLists | null> {
+    const taskList = this.items.find(
+      (item) => item.id === taskListId && item.user_id === userId,
+    )
 
     return taskList || null
   }

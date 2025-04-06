@@ -1,6 +1,7 @@
 import { Prisma, Task } from '@prisma/client'
 import { TaskRepository } from '../task-repository'
 import { randomUUID } from 'node:crypto'
+import { UpdateTaskData } from '@/@types/task'
 
 export class InMemoryTaskRepository implements TaskRepository {
   public items: Task[] = []
@@ -18,5 +19,29 @@ export class InMemoryTaskRepository implements TaskRepository {
 
     this.items.push(...tasks)
     return tasks
+  }
+
+  async updateTask(
+    data: UpdateTaskData,
+    taskListId: string,
+    taskId: string,
+  ): Promise<Task | null> {
+    const taskIndex = this.items.findIndex(
+      (item) => item.task_list_id === taskListId && item.id === taskId,
+    )
+
+    if (taskIndex === -1) return null
+
+    const task = this.items[taskIndex]
+
+    const updateTask: Task = {
+      ...task,
+      ...data,
+      updated_at: new Date(),
+    }
+
+    this.items[taskIndex] = updateTask
+
+    return updateTask
   }
 }

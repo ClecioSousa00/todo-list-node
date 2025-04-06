@@ -2,7 +2,6 @@ import { TaskListsRepository } from '@/repositories/task-lists-repository'
 import { TaskRepository } from '@/repositories/task-repository'
 import { Task } from '@prisma/client'
 import { TaskListNotFound } from '../errors/task-lists-not-found'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
 
 type Tasks = Pick<Task, 'description' | 'is_checked' | 'due_date'>
 
@@ -27,14 +26,10 @@ export class CreateTasksUseCases {
     taskListId,
     userId,
   }: TasksUseCaseRequest): Promise<TasksUseCaseResponse> {
-    const taskList = await this.taskListsRepository.getById(taskListId)
+    const taskList = await this.taskListsRepository.getById(taskListId, userId)
 
     if (!taskList) {
       throw new TaskListNotFound()
-    }
-
-    if (taskList.user_id !== userId) {
-      throw new InvalidCredentialsError()
     }
 
     const formattedTasks = tasks.map((task) => ({
