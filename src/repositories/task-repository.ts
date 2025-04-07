@@ -8,4 +8,6 @@ export interface TaskRepository {
     taskListId: string,
     taskId: string,
   ): Promise<Task | null>
+  deleteTask(taskId: string, taskListId: string): Promise<Task | null>
+  getAllTasks(taskListId: string): Promise<Task[]>
 }

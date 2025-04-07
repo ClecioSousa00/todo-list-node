@@ -44,4 +44,20 @@ export class InMemoryTaskRepository implements TaskRepository {
 
     return updateTask
   }
+
+  async deleteTask(taskId: string, taskListId: string) {
+    const index = this.items.findIndex(
+      (task) => task.id === taskId && task.task_list_id === taskListId,
+    )
+    if (index === -1) return null
+
+    const deleted = this.items[index]
+    this.items.splice(index, 1)
+    return deleted
+  }
+
+  async getAllTasks(taskListId: string) {
+    const tasks = this.items.filter((item) => item.task_list_id === taskListId)
+    return tasks
+  }
 }
