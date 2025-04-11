@@ -1,8 +1,5 @@
 import { Prisma, TaskLists } from '@prisma/client'
-import {
-  TaskListsRepository,
-  UpdateTitleTaskListProps,
-} from '../task-lists-repository'
+import { TaskListsRepository } from '../task-lists-repository'
 import { randomUUID } from 'node:crypto'
 
 export class InMemoryTaskListsRepository implements TaskListsRepository {
@@ -42,37 +39,19 @@ export class InMemoryTaskListsRepository implements TaskListsRepository {
     return taskLists
   }
 
-  async updateTitleTaskList(props: UpdateTitleTaskListProps) {
-    const { title, taskListId, userId } = props
-
+  async updateTitleTaskList(taskList: TaskLists) {
     const taskListIndex = this.items.findIndex(
-      (item) => item.id === taskListId && item.user_id === userId,
+      (item) => item.id === taskList.id,
     )
 
-    if (taskListIndex === -1) return null
-
-    const updatedTaskList = {
-      ...this.items[taskListIndex],
-      title,
-    }
-
-    this.items[taskListIndex] = updatedTaskList
-
-    return updatedTaskList
+    this.items[taskListIndex] = taskList
   }
 
-  async deleteTaskList(userId: string, taskListId: string) {
+  async deleteTaskList(taskList: TaskLists) {
     const taskListIndex = this.items.findIndex(
-      (item) => item.user_id === userId && item.id === taskListId,
+      (item) => item.id === taskList.id,
     )
-
-    if (taskListIndex === -1) return null
 
     this.items.splice(taskListIndex, 1)
-
-    const updatedTaskLists = this.items.filter(
-      (item) => item.user_id === userId,
-    )
-    return updatedTaskLists
   }
 }

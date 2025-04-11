@@ -1,15 +1,13 @@
 import { TaskListsRepository } from '@/repositories/task-lists-repository'
-import { TaskLists } from '@prisma/client'
-import { ResourceNotFoundError } from '../errors/resource-not-found'
+
+import { TaskListNotFound } from '../errors/task-lists-not-found'
 
 interface DeleteTaskListUseCaseRequest {
   userId: string
   taskListId: string
 }
 
-interface DeleteTaskListUseCaseResponse {
-  taskLists: TaskLists[]
-}
+interface DeleteTaskListUseCaseResponse {}
 
 export class DeleteTaskListUseCase {
   constructor(private taskListRepository: TaskListsRepository) {}
@@ -18,15 +16,14 @@ export class DeleteTaskListUseCase {
     userId,
     taskListId,
   }: DeleteTaskListUseCaseRequest): Promise<DeleteTaskListUseCaseResponse> {
-    const taskLists = await this.taskListRepository.deleteTaskList(
-      userId,
-      taskListId,
-    )
+    const taskList = await this.taskListRepository.getById(taskListId, userId)
 
-    if (taskLists === null) throw new ResourceNotFoundError()
-
-    return {
-      taskLists,
+    if (!taskList) {
+      throw new TaskListNotFound()
     }
+
+    await this.taskListRepository.deleteTaskList(taskList)
+
+    return {}
   }
 }

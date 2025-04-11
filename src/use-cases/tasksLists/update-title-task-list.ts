@@ -1,6 +1,6 @@
 import { TaskListsRepository } from '@/repositories/task-lists-repository'
 import { TaskLists } from '@prisma/client'
-import { ResourceNotFoundError } from '../errors/resource-not-found'
+import { TaskListNotFound } from '../errors/task-lists-not-found'
 
 interface UpdateTitleTaskListUseCaseRequest {
   title: string
@@ -20,13 +20,15 @@ export class UpdateTitleTaskListUseCase {
     taskListId,
     userId,
   }: UpdateTitleTaskListUseCaseRequest): Promise<UpdateTitleTaskListUseCaseResponse> {
-    const taskList = await this.taskListRepository.updateTitleTaskList({
-      title,
-      taskListId,
-      userId,
-    })
+    const taskList = await this.taskListRepository.getById(taskListId, userId)
 
-    if (!taskList) throw new ResourceNotFoundError()
+    if (!taskList) {
+      throw new TaskListNotFound()
+    }
+
+    taskList.title = title
+
+    await this.taskListRepository.updateTitleTaskList(taskList)
 
     return {
       taskList,

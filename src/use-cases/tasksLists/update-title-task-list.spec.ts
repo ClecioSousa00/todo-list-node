@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { UpdateTitleTaskListUseCase } from './update-title-task-list'
-import { ResourceNotFoundError } from '../errors/resource-not-found'
 import { InMemoryTaskListsRepository } from '@/repositories/in-memory/in-memory-task-lists-repository'
+import { TaskListNotFound } from '../errors/task-lists-not-found'
 
 let taskListRepository: InMemoryTaskListsRepository
 let updateTitleTaskListUseCase: UpdateTitleTaskListUseCase
@@ -36,6 +36,6 @@ describe('Update Title Task List Use Case', () => {
         taskListId: 'fake-task-list-id',
         userId: 'fake-user-id',
       }),
-    ).rejects.toBeInstanceOf(ResourceNotFoundError)
+    ).rejects.toBeInstanceOf(TaskListNotFound)
   })
 })
