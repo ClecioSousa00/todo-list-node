@@ -18,11 +18,16 @@ describe('Update Title Task List Use Case', () => {
       user_id: '1',
     })
 
-    const { taskList } = await updateTitleTaskListUseCase.execute({
+    await updateTitleTaskListUseCase.execute({
       title: 'Lista de Tarefas',
       taskListId: createdTaskList.id,
       userId: createdTaskList.user_id,
     })
+
+    const taskList = await taskListRepository.getById(
+      createdTaskList.id,
+      createdTaskList.user_id,
+    )
 
     expect(taskList).toEqual(
       expect.objectContaining({ title: 'Lista de Tarefas' }),

@@ -29,7 +29,7 @@ describe('Get All Task Lists (e2e) /task-lists', () => {
       })
 
     const getAllTaskListsResponse = await request(app.server)
-      .get('/task-lists')
+      .get('/task-list')
       .set('Authorization', `bearer ${token}`)
 
     expect(getAllTaskListsResponse.statusCode).toEqual(200)
