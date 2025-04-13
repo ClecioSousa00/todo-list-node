@@ -4,6 +4,7 @@ import { create } from './create'
 import { getAll } from './get-all'
 import { search } from './search'
 import { update } from './update'
+import { deleteTaskList } from './delete'
 
 export async function taskListRoutes(app: FastifyInstance) {
   app.addHook('onRequest', verifyJWT)
@@ -12,4 +13,5 @@ export async function taskListRoutes(app: FastifyInstance) {
   app.get('/task-list', getAll)
   app.get('/task-list/search', search)
   app.put('/task-list', update)
+  app.delete('/task-list/:id', deleteTaskList)
 }

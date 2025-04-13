@@ -18,5 +18,5 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
     userId: request.user.sub,
   })
 
-  return reply.status(201).send()
+  return reply.status(204).send()
 }

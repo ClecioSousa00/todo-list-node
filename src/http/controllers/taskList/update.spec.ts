@@ -25,7 +25,7 @@ describe('Update Task List (e2e) /task-list', () => {
 
     const taskList = taskListResponse.body.taskLists[0]
 
-    await request(app.server)
+    const updateTaskListResponse = await request(app.server)
       .put('/task-list')
       .set('Authorization', `bearer ${token}`)
       .send({
@@ -44,5 +44,7 @@ describe('Update Task List (e2e) /task-list', () => {
         id: taskList.id,
       }),
     ])
+
+    expect(updateTaskListResponse.statusCode).toEqual(204)
   })
 })
