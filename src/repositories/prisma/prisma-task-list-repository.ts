@@ -36,7 +36,8 @@ export class PrismaTaskListsRepository implements TaskListsRepository {
       where: {
         user_id: userId,
         title: {
-          contains: title,
+          contains: title.toLowerCase(),
+          mode: 'insensitive',
         },
       },
     })
