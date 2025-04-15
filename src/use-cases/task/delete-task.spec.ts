@@ -24,7 +24,7 @@ describe('Delete Task Use Case', () => {
       user_id: 'user-1',
     })
 
-    const [task1] = await taskRepository.createMany([
+    await taskRepository.createMany([
       {
         description: 'Node',
         task_list_id: taskList.id,
@@ -37,15 +37,17 @@ describe('Delete Task Use Case', () => {
       },
     ])
 
+    const [task] = await taskRepository.getAllTasks(taskList.id)
+
     await deleteTaskUseCase.execute({
-      taskId: task1.id,
-      taskListId: task1.task_list_id,
+      taskId: task.id,
+      taskListId: task.task_list_id,
       userId: taskList.user_id,
     })
 
     const getAllTasks = await taskRepository.getAllTasks(taskList.id)
 
-    const taskDeleted = getAllTasks.find((item) => item.id === task1.id)
+    const taskDeleted = getAllTasks.find((item) => item.id === task.id)
 
     expect(getAllTasks).toHaveLength(1)
     expect(taskDeleted).toBeFalsy()

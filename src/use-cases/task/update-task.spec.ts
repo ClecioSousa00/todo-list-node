@@ -30,7 +30,7 @@ describe('Update Task Use Case', () => {
       user_id: 'user-1',
     })
 
-    const [createdTask] = await taskRepository.createMany([
+    await taskRepository.createMany([
       {
         description: 'Estudar testes',
         due_date: new Date(),
@@ -38,7 +38,11 @@ describe('Update Task Use Case', () => {
       },
     ])
 
-    const { task } = await updateTaskUseCase.execute({
+    const tasks = await taskRepository.getAllTasks(taskList.id)
+
+    const createdTask = tasks[0]
+
+    await updateTaskUseCase.execute({
       taskListId: taskList.id,
       userId: 'user-1',
       taskId: createdTask.id,
@@ -49,8 +53,13 @@ describe('Update Task Use Case', () => {
       },
     })
 
-    expect(task.description).toEqual('Estudar Testes Unitários')
-    expect(task.is_checked).toBe(true)
+    const task = await taskRepository.getTaskById(
+      createdTask.id,
+      createdTask.task_list_id,
+    )
+
+    expect(task?.description).toEqual('Estudar Testes Unitários')
+    expect(task?.is_checked).toBe(true)
   })
 
   it('should update only the specified task', async () => {
@@ -59,7 +68,7 @@ describe('Update Task Use Case', () => {
       user_id: 'user-1',
     })
 
-    const [task1, task2] = await taskRepository.createMany([
+    await taskRepository.createMany([
       {
         description: 'Ler documentação',
         due_date: new Date(),
@@ -71,6 +80,8 @@ describe('Update Task Use Case', () => {
         task_list_id: taskList.id,
       },
     ])
+
+    const [task1, task2] = await taskRepository.getAllTasks(taskList.id)
 
     await updateTaskUseCase.execute({
       taskListId: taskList.id,
@@ -102,13 +113,17 @@ describe('Update Task Use Case', () => {
       user_id: 'user-1',
     })
 
-    const [createdTask] = await taskRepository.createMany([
+    await taskRepository.createMany([
       {
         description: 'Estudar testes',
         due_date: new Date(),
         task_list_id: taskList.id,
       },
     ])
+
+    const tasks = await taskRepository.getAllTasks(taskList.id)
+
+    const createdTask = tasks[0]
 
     await expect(() =>
       updateTaskUseCase.execute({

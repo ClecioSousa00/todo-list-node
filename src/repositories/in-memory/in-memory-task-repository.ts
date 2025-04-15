@@ -18,19 +18,10 @@ export class InMemoryTaskRepository implements TaskRepository {
     }))
 
     this.items.push(...tasks)
-    return tasks
   }
 
-  async updateTask(
-    data: UpdateTaskData,
-    taskListId: string,
-    taskId: string,
-  ): Promise<Task | null> {
-    const taskIndex = this.items.findIndex(
-      (item) => item.task_list_id === taskListId && item.id === taskId,
-    )
-
-    if (taskIndex === -1) return null
+  async updateTask(data: UpdateTaskData, taskId: string) {
+    const taskIndex = this.items.findIndex((item) => item.id === taskId)
 
     const task = this.items[taskIndex]
 
@@ -41,23 +32,24 @@ export class InMemoryTaskRepository implements TaskRepository {
     }
 
     this.items[taskIndex] = updateTask
-
-    return updateTask
   }
 
-  async deleteTask(taskId: string, taskListId: string) {
-    const index = this.items.findIndex(
-      (task) => task.id === taskId && task.task_list_id === taskListId,
-    )
-    if (index === -1) return null
+  async deleteTask(taskId: string) {
+    const index = this.items.findIndex((task) => task.id === taskId)
 
-    const deleted = this.items[index]
     this.items.splice(index, 1)
-    return deleted
   }
 
   async getAllTasks(taskListId: string) {
     const tasks = this.items.filter((item) => item.task_list_id === taskListId)
     return tasks
+  }
+
+  async getTaskById(taskId: string, taskListId: string) {
+    const task = this.items.find(
+      (item) => item.id === taskId && item.task_list_id === taskListId,
+    )
+
+    return task ?? null
   }
 }

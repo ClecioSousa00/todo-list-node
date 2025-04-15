@@ -1,6 +1,5 @@
 import { TaskListsRepository } from '@/repositories/task-lists-repository'
 import { TaskRepository } from '@/repositories/task-repository'
-import { Task } from '@prisma/client'
 import { TaskListNotFound } from '../errors/task-lists-not-found'
 import { TaskNotFound } from '../errors/task-not-found'
 import { UpdateTaskData } from '@/@types/task'
@@ -12,9 +11,7 @@ interface UpdateTaskUseCaseRequest {
   taskId: string
 }
 
-interface UpdateTaskUseCaseResponse {
-  task: Task
-}
+interface UpdateTaskUseCaseResponse {}
 
 export class UpdateTaskUseCase {
   constructor(
@@ -34,18 +31,18 @@ export class UpdateTaskUseCase {
       throw new TaskListNotFound()
     }
 
-    const task = await this.taskRepository.updateTask(
-      taskProps,
-      taskListId,
-      taskId,
-    )
+    const task = await this.taskRepository.getTaskById(taskId, taskListId)
 
     if (!task) {
       throw new TaskNotFound()
     }
 
-    return {
-      task,
-    }
+    await this.taskRepository.updateTask(
+      taskProps,
+
+      taskId,
+    )
+
+    return {}
   }
 }

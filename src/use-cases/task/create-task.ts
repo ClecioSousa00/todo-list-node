@@ -3,7 +3,7 @@ import { TaskRepository } from '@/repositories/task-repository'
 import { Task } from '@prisma/client'
 import { TaskListNotFound } from '../errors/task-lists-not-found'
 
-type Tasks = Pick<Task, 'description' | 'is_checked' | 'due_date'>
+type Tasks = Pick<Task, 'description' | 'due_date'>
 
 interface TasksUseCaseRequest {
   tasks: Tasks[]
@@ -11,9 +11,7 @@ interface TasksUseCaseRequest {
   userId: string
 }
 
-interface TasksUseCaseResponse {
-  tasks: Task[]
-}
+interface TasksUseCaseResponse {}
 
 export class CreateTasksUseCases {
   constructor(
@@ -34,15 +32,12 @@ export class CreateTasksUseCases {
 
     const formattedTasks = tasks.map((task) => ({
       description: task.description,
-      is_checked: task.is_checked,
       due_date: task.due_date,
       task_list_id: taskListId,
     }))
 
-    const tasksToCreate = await this.tasksRepository.createMany(formattedTasks)
+    await this.tasksRepository.createMany(formattedTasks)
 
-    return {
-      tasks: tasksToCreate,
-    }
+    return {}
   }
 }

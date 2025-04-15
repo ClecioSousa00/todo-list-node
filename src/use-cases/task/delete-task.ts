@@ -1,6 +1,5 @@
 import { TaskListsRepository } from '@/repositories/task-lists-repository'
 import { TaskRepository } from '@/repositories/task-repository'
-import { Task } from '@prisma/client'
 import { TaskListNotFound } from '../errors/task-lists-not-found'
 import { TaskNotFound } from '../errors/task-not-found'
 
@@ -10,9 +9,7 @@ interface DeleteTaskUseCaseRequest {
   userId: string
 }
 
-interface DeleteTaskUseCaseResponse {
-  task: Task
-}
+interface DeleteTaskUseCaseResponse {}
 
 export class DeleteTaskUseCase {
   constructor(
@@ -31,14 +28,14 @@ export class DeleteTaskUseCase {
       throw new TaskListNotFound()
     }
 
-    const task = await this.taskRepository.deleteTask(taskId, taskList.id)
+    const task = await this.taskRepository.getTaskById(taskId, taskListId)
 
     if (!task) {
       throw new TaskNotFound()
     }
 
-    return {
-      task,
-    }
+    await this.taskRepository.deleteTask(taskId)
+
+    return {}
   }
 }

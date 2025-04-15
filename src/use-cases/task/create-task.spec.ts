@@ -19,20 +19,21 @@ describe('Create Task Use Case', () => {
       user_id: 'user-1',
     })
 
-    const { tasks } = await taskUseCase.execute({
+    await taskUseCase.execute({
       userId: 'user-1',
       taskListId,
       tasks: [
         {
           description: 'task-1',
           due_date: new Date(),
-          is_checked: false,
         },
       ],
     })
 
+    const tasks = await taskRepository.getAllTasks(taskListId)
+
     console.log(tasks.length)
-    expect(tasks.length).toBeGreaterThan(0)
+    expect(tasks).toHaveLength(1)
   })
   it('should be not able create task without to-do list', async () => {
     await expect(() =>
@@ -43,7 +44,6 @@ describe('Create Task Use Case', () => {
           {
             description: 'task-1',
             due_date: new Date(),
-            is_checked: false,
           },
         ],
       }),
