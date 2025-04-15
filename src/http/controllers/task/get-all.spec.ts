@@ -30,11 +30,11 @@ describe('Get All Task (e2e) /tasks', () => {
       .send([
         {
           description: 'Estudar Fastify',
-          due_date: new Date(),
+          due_date: '28/02/2025',
         },
         {
           description: 'Estudar Testes E2E',
-          due_date: new Date(),
+          due_date: '28/02/2025',
         },
       ])
 

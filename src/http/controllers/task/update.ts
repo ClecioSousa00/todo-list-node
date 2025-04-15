@@ -3,14 +3,17 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
-  const TaskBodySchema = z.object({
+  const updateTaskBodySchema = z.object({
     description: z.string().min(5).optional(),
     due_date: z
-      .preprocess((arg) => {
-        if (typeof arg === 'string' || arg instanceof Date) {
-          return new Date(arg)
+      .preprocess((val) => {
+        if (typeof val === 'string') {
+          // Transforma de "DD/MM/YYYY" para "YYYY-MM-DD"
+          const [day, month, year] = val.split('/')
+          const isoString = `${year}-${month}-${day}`
+          return new Date(isoString)
         }
-        return arg
+        return val
       }, z.date())
       .optional(),
     is_checked: z.boolean().optional(),
@@ -22,7 +25,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
   })
 
   const { id, taskId } = createTaskParamsSchema.parse(request.params)
-  const task = TaskBodySchema.parse(request.body)
+  const task = updateTaskBodySchema.parse(request.body)
 
   const updateTaskUseCase = makeUpdateTaskUseCase()
 

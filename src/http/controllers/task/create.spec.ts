@@ -30,7 +30,7 @@ describe('Create Task (e2e) /task-list/:id/task', () => {
       .send([
         {
           description: 'Estudar Fastify',
-          due_date: new Date(),
+          due_date: '28/02/2025',
         },
       ])
 

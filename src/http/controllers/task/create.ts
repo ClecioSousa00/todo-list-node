@@ -6,11 +6,14 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   const createTaskBodySchema = z
     .object({
       description: z.string().min(5),
-      due_date: z.preprocess((arg) => {
-        if (typeof arg === 'string' || arg instanceof Date) {
-          return new Date(arg)
+      due_date: z.preprocess((val) => {
+        if (typeof val === 'string') {
+          // Transforma de "DD/MM/YYYY" para "YYYY-MM-DD"
+          const [day, month, year] = val.split('/')
+          const isoString = `${year}-${month}-${day}`
+          return new Date(isoString)
         }
-        return arg
+        return val
       }, z.date()),
     })
     .array()
