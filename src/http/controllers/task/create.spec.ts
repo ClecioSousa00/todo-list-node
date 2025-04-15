@@ -25,7 +25,7 @@ describe('Create Task (e2e) /task-list/:id/task', () => {
     const taskList = getAllTaskListResponse.body.taskLists[0]
 
     const createTaskResponse = await request(app.server)
-      .post(`/task-list/${taskList.id}/task`)
+      .post(`/task-list/${taskList.id}/tasks`)
       .set('Authorization', `bearer ${token}`)
       .send([
         {

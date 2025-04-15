@@ -3,11 +3,11 @@ import { createAndAuthenticateUser } from '@/utils/test/create-and-authenticate-
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-describe('Get All Task (e2e) /tasks', () => {
+describe('Delete Task (e2e) /tasks', () => {
   beforeAll(() => app.ready())
   afterAll(() => app.close())
 
-  it('Should be able to get all tasks', async () => {
+  it('Should be able to delete task', async () => {
     const { token } = await createAndAuthenticateUser(app)
 
     await request(app.server)
@@ -43,11 +43,21 @@ describe('Get All Task (e2e) /tasks', () => {
       .set('Authorization', `bearer ${token}`)
       .send()
 
-    expect(getAllTasksResponse.body.tasks).toHaveLength(2)
-    expect(getAllTasksResponse.body.tasks).toEqual([
-      expect.objectContaining({
-        description: 'Estudar Fastify',
-      }),
+    const [task] = getAllTasksResponse.body.tasks
+
+    const deleteTaskResponse = await request(app.server)
+      .delete(`/task-list/${taskList.id}/task/${task.id}`)
+      .set('Authorization', `bearer ${token}`)
+      .send()
+
+    const newListTasks = await request(app.server)
+      .get(`/task-list/${taskList.id}/tasks`)
+      .set('Authorization', `bearer ${token}`)
+      .send()
+
+    expect(deleteTaskResponse.status).toEqual(204)
+    expect(newListTasks.body.tasks).toHaveLength(1)
+    expect(newListTasks.body.tasks).toEqual([
       expect.objectContaining({
         description: 'Estudar Testes E2E',
       }),

@@ -3,11 +3,11 @@ import { createAndAuthenticateUser } from '@/utils/test/create-and-authenticate-
 import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-describe('Get All Task (e2e) /tasks', () => {
+describe('Update Task (e2e) /tasks', () => {
   beforeAll(() => app.ready())
   afterAll(() => app.close())
 
-  it('Should be able to get all tasks', async () => {
+  it('Should be able to delete task', async () => {
     const { token } = await createAndAuthenticateUser(app)
 
     await request(app.server)
@@ -43,14 +43,27 @@ describe('Get All Task (e2e) /tasks', () => {
       .set('Authorization', `bearer ${token}`)
       .send()
 
-    expect(getAllTasksResponse.body.tasks).toHaveLength(2)
-    expect(getAllTasksResponse.body.tasks).toEqual([
-      expect.objectContaining({
-        description: 'Estudar Fastify',
-      }),
-      expect.objectContaining({
-        description: 'Estudar Testes E2E',
-      }),
-    ])
+    const [task] = getAllTasksResponse.body.tasks
+
+    const updatedTaskResponse = await request(app.server)
+      .patch(`/task-list/${taskList.id}/task/${task.id}`)
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        description: 'Estudar os conceitos do Fastify',
+      })
+
+    const newListTasks = await request(app.server)
+      .get(`/task-list/${taskList.id}/tasks`)
+      .set('Authorization', `bearer ${token}`)
+      .send()
+
+    expect(updatedTaskResponse.status).toEqual(204)
+    expect(newListTasks.body.tasks).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          description: 'Estudar os conceitos do Fastify',
+        }),
+      ]),
+    )
   })
 })
