@@ -14,6 +14,7 @@ export class TaskList extends Entity<TaskListProps> {
 
   set title(title: string) {
     this.props.title = title
+    this.props.updatedAt = new Date()
   }
 
   static create(
