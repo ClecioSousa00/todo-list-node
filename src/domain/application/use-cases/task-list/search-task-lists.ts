@@ -1,5 +1,6 @@
-import { TaskList } from '@/domain/entities/taskList'
-import { TaskListRepository } from '@/domain/repositories/task-list-repository'
+import { TaskList } from '@/domain/enterprise/entities/taskList'
+
+import { TaskListRepository } from '../../repositories/task-list-repository'
 
 interface SearchTaskListsUseCaseRequest {
   userId: string

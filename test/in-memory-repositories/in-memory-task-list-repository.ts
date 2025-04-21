@@ -1,5 +1,5 @@
-import { TaskList } from '@/domain/entities/taskList'
-import { TaskListRepository } from '@/domain/repositories/task-list-repository'
+import { TaskListRepository } from '@/domain/application/repositories/task-list-repository'
+import { TaskList } from '@/domain/enterprise/entities/taskList'
 
 export class InMemoryTaskListRepository implements TaskListRepository {
   public items: TaskList[] = []

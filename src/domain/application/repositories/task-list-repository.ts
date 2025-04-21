@@ -1,4 +1,4 @@
-import { TaskList } from '../entities/taskList'
+import { TaskList } from '@/domain/enterprise/entities/taskList'
 
 export interface TaskListRepository {
   create(taskList: TaskList): Promise<void>

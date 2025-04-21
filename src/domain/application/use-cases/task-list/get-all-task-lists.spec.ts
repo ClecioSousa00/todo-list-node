@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { GetAllTaskListsUseCases } from './get-all-task-lists'
 import { InMemoryTaskListRepository } from 'test/in-memory-repositories/in-memory-task-list-repository'
-import { TaskList } from '@/domain/entities/taskList'
+import { TaskList } from '@/domain/enterprise/entities/taskList'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 let taskListRepository: InMemoryTaskListRepository

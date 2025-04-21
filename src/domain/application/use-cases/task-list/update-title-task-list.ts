@@ -1,5 +1,5 @@
 import { TaskListNotFound } from '@/domain/errors/task-lists-not-found'
-import { TaskListRepository } from '@/domain/repositories/task-list-repository'
+import { TaskListRepository } from '../../repositories/task-list-repository'
 
 interface UpdateTitleTaskListUseCaseRequest {
   title: string

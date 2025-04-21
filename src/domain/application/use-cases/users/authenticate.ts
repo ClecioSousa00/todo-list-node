@@ -1,7 +1,7 @@
 import { compare } from 'bcryptjs'
-import { UsersRepository } from '@/domain/repositories/users-repository'
 import { InvalidCredentialsError } from '@/domain/errors/invalid-credentials-error'
-import { User } from '@/domain/entities/user'
+import { User } from '@/domain/enterprise/entities/user'
+import { UsersRepository } from '../../repositories/users-repository'
 
 interface AuthenticateUseCaseRequest {
   email: string

@@ -1,6 +1,6 @@
-import { User } from '@/domain/entities/user'
+import { User } from '@/domain/enterprise/entities/user'
 import { ResourceNotFoundError } from '@/domain/errors/resource-not-found'
-import { UsersRepository } from '@/domain/repositories/users-repository'
+import { UsersRepository } from '../../repositories/users-repository'
 
 interface GetUserProfileUseCaseRequest {
   userId: string

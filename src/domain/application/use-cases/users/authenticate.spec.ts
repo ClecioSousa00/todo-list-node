@@ -3,7 +3,7 @@ import { hash } from 'bcryptjs'
 import { AuthenticateUseCase } from './authenticate'
 import { InMemoryUserRepository } from 'test/in-memory-repositories/in-memory-user-repository'
 import { InvalidCredentialsError } from '@/domain/errors/invalid-credentials-error'
-import { User } from '@/domain/entities/user'
+import { User } from '@/domain/enterprise/entities/user'
 
 let usersRepository: InMemoryUserRepository
 let authenticateUseCase: AuthenticateUseCase
@@ -13,11 +13,12 @@ describe('Authenticate Use Case', () => {
     authenticateUseCase = new AuthenticateUseCase(usersRepository)
   })
   it('should be able to register', async () => {
-    const user = new User({
+    const user = User.create({
       name: 'john doe',
       email: 'johndoe@gmail.com',
       password: await hash('123456', 6),
     })
+
     await usersRepository.create(user)
 
     const authenticateResponse = await authenticateUseCase.execute({
@@ -38,11 +39,12 @@ describe('Authenticate Use Case', () => {
   })
 
   it('should not be able to authenticate with wrong password', async () => {
-    const user = new User({
+    const user = User.create({
       name: 'john doe',
       email: 'johndoe@gmail.com',
       password: await hash('123456', 6),
     })
+
     await usersRepository.create(user)
 
     await expect(() =>

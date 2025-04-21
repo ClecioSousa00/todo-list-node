@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { CreateTaskListsUseCases } from './create-task-lists'
 import { InMemoryTaskListRepository } from 'test/in-memory-repositories/in-memory-task-list-repository'
 import { InMemoryUserRepository } from 'test/in-memory-repositories/in-memory-user-repository'
-import { User } from '@/domain/entities/user'
+import { User } from '@/domain/enterprise/entities/user'
 
 let taskListRepository: InMemoryTaskListRepository
 let userRepository: InMemoryUserRepository
