@@ -13,3 +13,7 @@ export type TaskProps = {
   createdAt: Date
   updatedAt?: Date
 }
+
+export type PartialTaskProps = Partial<
+  Pick<TaskProps, 'description' | 'dueDate' | 'isChecked'>
+>

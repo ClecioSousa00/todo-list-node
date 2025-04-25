@@ -16,6 +16,10 @@ export class Task extends Entity<TaskProps> {
     return this.props.taskListId
   }
 
+  get isChecked() {
+    return this.props.isChecked
+  }
+
   set description(description: string) {
     this.props.description = description
     this.props.updatedAt = new Date()
@@ -23,6 +27,27 @@ export class Task extends Entity<TaskProps> {
 
   set dueDate(dueDate: Date) {
     this.props.dueDate = dueDate
+    this.props.updatedAt = new Date()
+  }
+
+  set isChecked(checked: boolean) {
+    this.props.isChecked = checked
+    this.props.updatedAt = new Date()
+  }
+
+  update(props: Partial<TaskProps>) {
+    if (props.description !== undefined) {
+      this.description = props.description
+    }
+
+    if (props.dueDate !== undefined) {
+      this.dueDate = props.dueDate
+    }
+
+    if (props.isChecked !== undefined) {
+      this.isChecked = props.isChecked
+    }
+
     this.props.updatedAt = new Date()
   }
 
