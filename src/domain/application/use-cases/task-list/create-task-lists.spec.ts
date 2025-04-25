@@ -2,7 +2,8 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { CreateTaskListsUseCases } from './create-task-lists'
 import { InMemoryTaskListRepository } from 'test/in-memory-repositories/in-memory-task-list-repository'
 import { InMemoryUserRepository } from 'test/in-memory-repositories/in-memory-user-repository'
-import { User } from '@/domain/enterprise/entities/user'
+import { makeUser } from 'test/factories/make-user'
+import { ResourceNotFoundError } from '@/domain/errors/resource-not-found'
 
 let taskListRepository: InMemoryTaskListRepository
 let userRepository: InMemoryUserRepository
@@ -11,14 +12,13 @@ describe('Create Task Lists Use Case', () => {
   beforeEach(() => {
     taskListRepository = new InMemoryTaskListRepository()
     userRepository = new InMemoryUserRepository()
-    taskListsUseCase = new CreateTaskListsUseCases(taskListRepository)
+    taskListsUseCase = new CreateTaskListsUseCases(
+      taskListRepository,
+      userRepository,
+    )
   })
   it('should be able create task list', async () => {
-    const user = User.create({
-      email: 'johndoe@gmail.com',
-      name: 'john doe',
-      password: '123456',
-    })
+    const user = makeUser()
 
     const { id: userId } = await userRepository.create(user)
 
@@ -28,5 +28,15 @@ describe('Create Task Lists Use Case', () => {
     })
 
     expect(taskList.id.toString()).toEqual(expect.any(String))
+  })
+  it('should no be able create task list if wrong user id', async () => {
+    await expect(() =>
+      taskListsUseCase.execute({
+        title: 'tarefa-1',
+        userId: 'fake-id',
+      }),
+    ).rejects.toBeInstanceOf(ResourceNotFoundError)
+
+    expect(taskListRepository.items).toHaveLength(0)
   })
 })
