@@ -20,11 +20,11 @@ describe('Create Task Lists Use Case', () => {
   it('should be able create task list', async () => {
     const user = makeUser()
 
-    const { id: userId } = await userRepository.create(user)
+    await userRepository.create(user)
 
     const { taskList } = await taskListsUseCase.execute({
       title: 'tarefa-1',
-      userId: userId.toString(),
+      userId: user.id.toString(),
     })
 
     expect(taskList.id.toString()).toEqual(expect.any(String))

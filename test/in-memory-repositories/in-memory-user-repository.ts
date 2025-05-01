@@ -5,7 +5,6 @@ export class InMemoryUserRepository implements UsersRepository {
   items: User[] = []
   async create(user: User) {
     this.items.push(user)
-    return user
   }
 
   async findByEmail(email: string) {
