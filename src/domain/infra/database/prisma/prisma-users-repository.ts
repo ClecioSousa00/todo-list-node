@@ -1,7 +1,7 @@
 import { UsersRepository } from '@/domain/application/repositories/users-repository'
 import { User } from '@/domain/enterprise/entities/user'
 import { prisma } from '@/lib/prisma'
-import { prismaUserToDomain } from './mappers/prismaUserToDomain'
+import { PrismaUserMapper } from './mappers/prismaUserToDomain'
 
 export class PrismaUsersRepository implements UsersRepository {
   async create(user: User) {
@@ -23,7 +23,7 @@ export class PrismaUsersRepository implements UsersRepository {
 
     if (!user) return user
 
-    return prismaUserToDomain(user)
+    return PrismaUserMapper.toDomain(user)
   }
 
   async findById(id: string) {
@@ -33,6 +33,6 @@ export class PrismaUsersRepository implements UsersRepository {
       },
     })
     if (!user) return user
-    return prismaUserToDomain(user)
+    return PrismaUserMapper.toDomain(user)
   }
 }

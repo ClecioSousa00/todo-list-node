@@ -1,10 +1,13 @@
 import { FastifyInstance } from 'fastify'
-import { makeUserController } from '../controllers/users/factories/make-user-controller'
+import { register } from '../controllers/users/register'
+import { authenticate } from '../controllers/users/authenticate'
+import { verifyJWT } from '../middlewares/verify-jwt'
+import { profile } from '../controllers/users/profile'
 
 export async function userRoutes(app: FastifyInstance) {
-  const userController = makeUserController()
+  app.post('/users', register)
+  app.post('/sessions', authenticate)
+  // app.patch('/token/refresh', refresh)
 
-  app.post('/users', (request, reply) =>
-    userController.register(request, reply),
-  )
+  app.get('/profile', { onRequest: [verifyJWT] }, profile)
 }

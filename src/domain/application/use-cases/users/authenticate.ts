@@ -1,34 +1,50 @@
-import { compare } from 'bcryptjs'
 import { InvalidCredentialsError } from '@/domain/errors/invalid-credentials-error'
-import { User } from '@/domain/enterprise/entities/user'
 import { UsersRepository } from '../../repositories/users-repository'
+import { UseCase } from '../use-case'
+import { HashComparer } from '../../cryptography/hash-comparer'
 
-interface AuthenticateUseCaseRequest {
+interface AuthenticateInputDto {
   email: string
   password: string
 }
 
-interface AuthenticateUseCaseResponse {
-  user: User
+interface AuthenticateOutputDto {
+  id: string
 }
 
-export class AuthenticateUseCase {
-  constructor(private usersRepository: UsersRepository) {}
+export class AuthenticateUseCase
+  implements UseCase<AuthenticateInputDto, AuthenticateOutputDto>
+{
+  constructor(
+    private usersRepository: UsersRepository,
+    private hashComparer: HashComparer,
+  ) {}
 
   async execute({
     email,
     password,
-  }: AuthenticateUseCaseRequest): Promise<AuthenticateUseCaseResponse> {
+  }: AuthenticateInputDto): Promise<AuthenticateOutputDto> {
     const user = await this.usersRepository.findByEmail(email)
 
-    if (!user) throw new InvalidCredentialsError()
+    if (!user) {
+      console.log('não achou user')
 
-    const doesPasswordMatches = await compare(password, user.password)
+      throw new InvalidCredentialsError()
+    }
 
-    if (!doesPasswordMatches) throw new InvalidCredentialsError()
+    const doesPasswordMatches = await this.hashComparer.compare(
+      password,
+      user.password,
+    )
+
+    if (!doesPasswordMatches) {
+      console.log('erro senha')
+
+      throw new InvalidCredentialsError()
+    }
 
     return {
-      user,
+      id: user.id.toString(),
     }
   }
 }

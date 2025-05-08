@@ -1,27 +1,37 @@
-import { User } from '@/domain/enterprise/entities/user'
 import { ResourceNotFoundError } from '@/domain/errors/resource-not-found'
 import { UsersRepository } from '../../repositories/users-repository'
+import { UseCase } from '../use-case'
 
-interface GetUserProfileUseCaseRequest {
+interface GetUserProfileInputDto {
   userId: string
 }
 
-interface GetUserProfileUseCaseResponse {
-  user: User
+interface GetUserProfileOutputDto {
+  userProfile: {
+    id: string
+    name: string
+    email: string
+  }
 }
 
-export class GetUserProfileUseCase {
+export class GetUserProfileUseCase
+  implements UseCase<GetUserProfileInputDto, GetUserProfileOutputDto>
+{
   constructor(private usersRepository: UsersRepository) {}
 
   async execute({
     userId,
-  }: GetUserProfileUseCaseRequest): Promise<GetUserProfileUseCaseResponse> {
+  }: GetUserProfileInputDto): Promise<GetUserProfileOutputDto> {
     const user = await this.usersRepository.findById(userId)
 
     if (!user) throw new ResourceNotFoundError()
 
     return {
-      user,
+      userProfile: {
+        id: user.id.toString(),
+        name: user.name,
+        email: user.email,
+      },
     }
   }
 }
