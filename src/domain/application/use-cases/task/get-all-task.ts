@@ -1,14 +1,21 @@
-import { Task } from '@/domain/enterprise/entities/task'
 import { TaskRepository } from '../../repositories/task-repository'
 import { TaskListRepository } from '../../repositories/task-list-repository'
 import { TaskListNotFound } from '@/domain/errors/task-lists-not-found'
 
-interface GetAllTasksUseCaseRequest {
+type TaskProps = {
+  id: string
+  description: string
+  dueDate: Date
+  isChecked: boolean
+  taskListId: string
+}
+
+interface GetAllTasksInputDto {
   taskListId: string
   userId: string
 }
-interface GetAllTasksUseCaseResponse {
-  tasks: Task[]
+interface GetAllTasksOutputDto {
+  tasks: TaskProps[]
 }
 
 export class GetAllTasksUseCase {
@@ -20,14 +27,23 @@ export class GetAllTasksUseCase {
   async execute({
     taskListId,
     userId,
-  }: GetAllTasksUseCaseRequest): Promise<GetAllTasksUseCaseResponse> {
+  }: GetAllTasksInputDto): Promise<GetAllTasksOutputDto> {
     const taskList = await this.taskListRepository.getById(taskListId, userId)
 
     if (!taskList) {
       throw new TaskListNotFound()
     }
 
-    const tasks = await this.taskRepository.getAllTasks(taskListId)
+    const allTasks = await this.taskRepository.getAllTasks(taskListId)
+
+    const tasks: TaskProps[] = allTasks.map((task) => ({
+      description: task.description,
+      dueDate: task.dueDate,
+      id: task.id.toString(),
+      isChecked: task.isChecked,
+      taskListId: task.taskListId.toString(),
+    }))
+
     return {
       tasks,
     }

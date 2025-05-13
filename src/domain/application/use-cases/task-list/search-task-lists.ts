@@ -1,27 +1,38 @@
-import { TaskList } from '@/domain/enterprise/entities/taskList'
-
 import { TaskListRepository } from '../../repositories/task-list-repository'
+import { UseCase } from '../use-case'
 
-interface SearchTaskListsUseCaseRequest {
+type TaskListProps = {
+  title: string
+  id: string
+}
+
+interface SearchTaskListsInputDto {
   userId: string
   title: string
 }
 
-interface SearchTaskListsUseCaseResponse {
-  taskLists: TaskList[]
+interface SearchTaskListsOutputDto {
+  taskLists: TaskListProps[]
 }
 
-export class SearchTaskListsUseCase {
+export class SearchTaskListsUseCase
+  implements UseCase<SearchTaskListsInputDto, SearchTaskListsOutputDto>
+{
   constructor(private taskListRepository: TaskListRepository) {}
 
   async execute({
     userId,
     title,
-  }: SearchTaskListsUseCaseRequest): Promise<SearchTaskListsUseCaseResponse> {
+  }: SearchTaskListsInputDto): Promise<SearchTaskListsOutputDto> {
     const taskLists = await this.taskListRepository.searchMany(title, userId)
 
+    const outputTaskLists: TaskListProps[] = taskLists.map((taskList) => ({
+      title: taskList.title,
+      id: taskList.id.toString(),
+    }))
+
     return {
-      taskLists,
+      taskLists: outputTaskLists,
     }
   }
 }

@@ -1,19 +1,23 @@
 import { TaskListNotFound } from '@/domain/errors/task-lists-not-found'
 import { TaskListRepository } from '../../repositories/task-list-repository'
-interface DeleteTaskListUseCaseRequest {
+import { UseCase } from '../use-case'
+
+interface DeleteTaskListInputDto {
   userId: string
   taskListId: string
 }
 
-interface DeleteTaskListUseCaseResponse {}
+interface DeleteTaskListOutputDto {}
 
-export class DeleteTaskListUseCase {
+export class DeleteTaskListUseCase
+  implements UseCase<DeleteTaskListInputDto, DeleteTaskListOutputDto>
+{
   constructor(private taskListRepository: TaskListRepository) {}
 
   async execute({
     userId,
     taskListId,
-  }: DeleteTaskListUseCaseRequest): Promise<DeleteTaskListUseCaseResponse> {
+  }: DeleteTaskListInputDto): Promise<DeleteTaskListOutputDto> {
     const taskList = await this.taskListRepository.getById(taskListId, userId)
 
     if (!taskList) {

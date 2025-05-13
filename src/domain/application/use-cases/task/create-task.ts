@@ -2,18 +2,21 @@ import { Task } from '@/domain/enterprise/entities/task'
 import { TaskRepository } from '../../repositories/task-repository'
 import { TaskListRepository } from '../../repositories/task-list-repository'
 import { TaskListNotFound } from '@/domain/errors/task-lists-not-found'
+import { UseCase } from '../use-case'
 
 type Tasks = Pick<Task, 'description' | 'dueDate'>
 
-interface TasksUseCaseRequest {
+interface TasksUseInputDto {
   tasks: Tasks[]
   taskListId: string
   userId: string
 }
 
-interface TasksUseCaseResponse {}
+interface TaskOutputDto {}
 
-export class CreateTasksUseCases {
+export class CreateTasksUseCases
+  implements UseCase<TasksUseInputDto, TaskOutputDto>
+{
   constructor(
     private tasksRepository: TaskRepository,
     private taskListsRepository: TaskListRepository,
@@ -23,7 +26,7 @@ export class CreateTasksUseCases {
     tasks,
     taskListId,
     userId,
-  }: TasksUseCaseRequest): Promise<TasksUseCaseResponse> {
+  }: TasksUseInputDto): Promise<TaskOutputDto> {
     const taskList = await this.taskListsRepository.getById(taskListId, userId)
 
     if (!taskList) {
@@ -38,12 +41,6 @@ export class CreateTasksUseCases {
       })
       return newTask
     })
-
-    // const formattedTasks = tasks.map((task) => ({
-    //   description: task.description,
-    //   due_date: task.due_date,
-    //   task_list_id: taskListId,
-    // }))
 
     await this.tasksRepository.createMany(createTasks)
 

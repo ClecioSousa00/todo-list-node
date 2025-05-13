@@ -27,8 +27,6 @@ export class AuthenticateUseCase
     const user = await this.usersRepository.findByEmail(email)
 
     if (!user) {
-      console.log('não achou user')
-
       throw new InvalidCredentialsError()
     }
 
@@ -38,8 +36,6 @@ export class AuthenticateUseCase
     )
 
     if (!doesPasswordMatches) {
-      console.log('erro senha')
-
       throw new InvalidCredentialsError()
     }
 

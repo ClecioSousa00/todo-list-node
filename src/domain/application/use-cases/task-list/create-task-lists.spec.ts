@@ -22,12 +22,12 @@ describe('Create Task Lists Use Case', () => {
 
     await userRepository.create(user)
 
-    const { taskList } = await taskListsUseCase.execute({
+    const { taskListId } = await taskListsUseCase.execute({
       title: 'tarefa-1',
       userId: user.id.toString(),
     })
 
-    expect(taskList.id.toString()).toEqual(expect.any(String))
+    expect(taskListId).toEqual(expect.any(String))
   })
   it('should no be able create task list if wrong user id', async () => {
     await expect(() =>

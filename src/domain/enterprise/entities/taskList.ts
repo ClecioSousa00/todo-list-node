@@ -8,6 +8,10 @@ export class TaskList extends Entity<TaskListProps> {
     return this.props.userId
   }
 
+  get createdAt() {
+    return this.props.createdAt
+  }
+
   get title() {
     return this.props.title
   }

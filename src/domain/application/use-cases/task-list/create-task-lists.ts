@@ -3,17 +3,20 @@ import { TaskList } from '@/domain/enterprise/entities/taskList'
 import { TaskListRepository } from '../../repositories/task-list-repository'
 import { UsersRepository } from '../../repositories/users-repository'
 import { ResourceNotFoundError } from '@/domain/errors/resource-not-found'
+import { UseCase } from '../use-case'
 
-interface TaskListsUseCaseRequest {
+interface TaskListsInputDto {
   title: string
   userId: string
 }
 
-interface TaskListsUseCaseResponse {
-  taskList: TaskList
+interface TaskListsOutputDto {
+  taskListId: string
 }
 
-export class CreateTaskListsUseCases {
+export class CreateTaskListsUseCases
+  implements UseCase<TaskListsInputDto, TaskListsOutputDto>
+{
   constructor(
     private taskListsRepository: TaskListRepository,
     private usersRepository: UsersRepository,
@@ -22,7 +25,7 @@ export class CreateTaskListsUseCases {
   async execute({
     title,
     userId,
-  }: TaskListsUseCaseRequest): Promise<TaskListsUseCaseResponse> {
+  }: TaskListsInputDto): Promise<TaskListsOutputDto> {
     const user = await this.usersRepository.findById(userId)
 
     if (!user) {
@@ -37,7 +40,7 @@ export class CreateTaskListsUseCases {
     await this.taskListsRepository.create(taskList)
 
     return {
-      taskList,
+      taskListId: taskList.id.toString(),
     }
   }
 }

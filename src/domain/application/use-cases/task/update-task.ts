@@ -3,17 +3,20 @@ import { TaskListRepository } from '../../repositories/task-list-repository'
 import { TaskListNotFound } from '@/domain/errors/task-lists-not-found'
 import { TaskNotFound } from '@/domain/errors/task-not-found'
 import { PartialTaskProps } from '@/@types/task'
+import { UseCase } from '../use-case'
 
-interface UpdateTaskUseCaseRequest {
+interface UpdateTaskInputDto {
   userId: string
   task: PartialTaskProps
   taskId: string
   taskListId: string
 }
 
-interface UpdateTaskUseCaseResponse {}
+interface UpdateTaskOutputDto {}
 
-export class UpdateTaskUseCase {
+export class UpdateTaskUseCase
+  implements UseCase<UpdateTaskInputDto, UpdateTaskOutputDto>
+{
   constructor(
     private taskRepository: TaskRepository,
     private taskListsRepository: TaskListRepository,
@@ -24,7 +27,7 @@ export class UpdateTaskUseCase {
     taskId,
     taskListId,
     task,
-  }: UpdateTaskUseCaseRequest): Promise<UpdateTaskUseCaseResponse> {
+  }: UpdateTaskInputDto): Promise<UpdateTaskOutputDto> {
     const taskList = await this.taskListsRepository.getById(taskListId, userId)
 
     if (!taskList) {

@@ -1,22 +1,25 @@
 import { TaskListNotFound } from '@/domain/errors/task-lists-not-found'
 import { TaskListRepository } from '../../repositories/task-list-repository'
+import { UseCase } from '../use-case'
 
-interface UpdateTitleTaskListUseCaseRequest {
+interface UpdateTitleTaskListInputDto {
   title: string
   taskListId: string
   userId: string
 }
 
-interface UpdateTitleTaskListUseCaseResponse {}
+interface UpdateTitleTaskListOutputDto {}
 
-export class UpdateTitleTaskListUseCase {
+export class UpdateTitleTaskListUseCase
+  implements UseCase<UpdateTitleTaskListInputDto, UpdateTitleTaskListOutputDto>
+{
   constructor(private taskListRepository: TaskListRepository) {}
 
   async execute({
     title,
     taskListId,
     userId,
-  }: UpdateTitleTaskListUseCaseRequest): Promise<UpdateTitleTaskListUseCaseResponse> {
+  }: UpdateTitleTaskListInputDto): Promise<UpdateTitleTaskListOutputDto> {
     const taskList = await this.taskListRepository.getById(taskListId, userId)
 
     if (!taskList) {

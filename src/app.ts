@@ -4,6 +4,8 @@ import { env } from './env'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 import { userRoutes } from './domain/infra/http/routes/users'
+import { taskListRoutes } from './domain/infra/http/routes/task-list'
+import { taskRoutes } from './domain/infra/http/routes/tasks'
 
 export const app = fastify()
 
@@ -21,8 +23,8 @@ app.register(fastifyJwt, {
 app.register(fastifyCookie)
 
 app.register(userRoutes)
-// app.register(taskListRoutes)
-// app.register(taskRoutes)
+app.register(taskListRoutes)
+app.register(taskRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
